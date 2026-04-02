@@ -69,7 +69,7 @@ A complete Proof of Concept demonstrating the Polymer XSS vulnerability is inclu
 
 - **[poc/xss-demo.html](poc/xss-demo.html)**: A minimal Polymer 3 component that binds untrusted data from a URL parameter to the `inner-h-t-m-l` sink.
 - **Evidence**:
-  ![XSS Evidence](poc/xss_based_on_dynamic_payload.png)
+  ![XSS Evidence](https://raw.githubusercontent.com/JoshuaProvoste/eslint-plugin-polymer-security/master/poc/xss_based_on_dynamic_payload.png)
 
 ### How to run the PoC:
 1. Clone this repository.

@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-polymer-security",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ESLint rules for securing Polymer applications against common XSS sinks.",
   "main": "index.js",
   "files": [
