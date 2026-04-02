@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-polymer-security",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "ESLint rules for securing Polymer applications against common XSS sinks.",
   "main": "index.js",
   "files": [
@@ -20,7 +20,7 @@
   "author": "Joshua Provoste",
   "license": "MIT",
   "scripts": {
-    "test": "node tests/no-inner-h-t-m-l-binding.test.js"
+    "test": "node tests/no-inner-h-t-m-l-binding.test.js && node tests/no-insecure-url-resolution.test.js"
   },
   "peerDependencies": {
     "eslint": ">=5.0.0"
