@@ -22,6 +22,9 @@ Next, install `eslint-plugin-polymer-security`:
 npm install eslint-plugin-polymer-security --save-dev
 ```
 
+*Note: You can also install it directly from GitHub:*
+`npm install https://github.com/JoshuaProvoste/eslint-plugin-polymer-security.git --save-dev`
+
 ## Usage
 
 Add `polymer-security` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
