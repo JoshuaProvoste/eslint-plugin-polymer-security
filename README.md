@@ -60,6 +60,19 @@ static get template() {
 **Secure Alternative:**
 Implement a custom sanitizer via `window.Polymer.sanitizeDOMValue` and use safe data binding patterns.
 
+## Proof of Concept (PoC)
+
+A complete Proof of Concept demonstrating the Polymer XSS vulnerability is included in the [poc/](poc/) directory of this repository.
+
+- **[poc/xss-demo.html](poc/xss-demo.html)**: A minimal Polymer 3 component that binds untrusted data from a URL parameter to the `inner-h-t-m-l` sink.
+- **Evidence**:
+  ![XSS Evidence](poc/xss_based_on_dynamic_payload.png)
+
+### How to run the PoC:
+1. Clone this repository.
+2. Serve the root directory using a local web server (e.g., `python -m http.server 8081`).
+3. Navigate to: `http://localhost:8081/poc/xss-demo.html?p=<img src=x onerror=alert('XSS_SUCCESS_IN_POC')>`
+
 ## License
 
 MIT

