@@ -2,6 +2,11 @@
 
 ESLint rules for securing Polymer applications against common DOM-based XSS sinks.
 
+[![npm version](https://img.shields.io/npm/v/eslint-plugin-polymer-security.svg)](https://www.npmjs.com/package/eslint-plugin-polymer-security)
+[![npm downloads](https://img.shields.io/npm/dm/eslint-plugin-polymer-security.svg)](https://www.npmjs.com/package/eslint-plugin-polymer-security)
+
+---
+
 ## The "Pit of Failure" in Polymer
 
 Unlike modern frameworks like React and Angular, which are **Secure by Default**, Polymer (v3.5.2 and below) allows unsanitized data binding to sensitive DOM properties directly through its template syntax. This creates a "Pit of Failure" where legitimate developers can unintentionally introduce XSS vulnerabilities.
